@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Seek Bar</string>
     <string name="seekbar_value_message">The seekbar value is %1$d</string>
+    <string name="show_square">Show Square</string>
 </resources>
