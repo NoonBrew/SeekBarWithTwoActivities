@@ -1,14 +1,29 @@
 package com.example.seekbar
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+
+
+const val EXTRA_SQUARE_SIZE = "com.example.seekbar.tap_the_square.SQUARE_SIZE"
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var seekbar: SeekBar
     private lateinit var seekbarLabel: TextView
+    private lateinit var showSquareButton: Button
+
+    private val squareResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        result -> handleSquareResult(result)
+    }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         // Grab our resource id.
         seekbar = findViewById(R.id.seek_bar)
         seekbarLabel = findViewById(R.id.seek_bar_label)
+        showSquareButton = findViewById(R.id.show_square_button)
         // Progress is an attribute of seekbar. Gets an Int value.
         val initialProgress = seekbar.progress
         // Function passes the int to the text of our seekbar label.
@@ -31,6 +47,41 @@ class MainActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(p0: SeekBar?) { }
             override fun onStopTrackingTouch(p0: SeekBar?) { }
         })
+
+        showSquareButton.setOnClickListener {
+            showSquare()
+        }
+    }
+
+    private fun showSquare() {
+        // launch SquareActivity
+//        val showSquareIntent = Intent(this, SquareActivity::class.java)
+//
+//        showSquareIntent.putExtra(EXTRA_SQUARE_SIZE, seekbar.progress)
+//
+//        squareResultLauncher.launch(showSquareIntent)
+        // tell SquareActivity how large the square should be
+        // based on the progress of the Seekbar
+        Intent(this, SquareActivity::class.java).apply {
+            putExtra(EXTRA_SQUARE_SIZE, seekbar.progress)
+            squareResultLauncher.launch(this)
+        }
+
+    }
+
+    private fun handleSquareResult(result: ActivityResult) {
+        if(result.resultCode == RESULT_OK) {
+            val intent = result.data
+            val tapped = intent?.getBooleanExtra(EXTRA_TAPPED_INSIDE_SQUARE, false) ?: false
+            val message = if (tapped) {
+                "You tapped the square"
+            } else {
+                "You missed the square"
+            }
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        } else if (result.resultCode == RESULT_CANCELED) {
+            Toast.makeText(this, "You did not try and tap the square", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun updateLabel(progress: Int) {
