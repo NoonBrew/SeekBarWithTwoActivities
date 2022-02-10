@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.snackbar.Snackbar
 
 const val EXTRA_TAPPED_INSIDE_SQUARE = "com.example.seekbar.TAPPED_INSIDE_SQUARE"
 
@@ -24,11 +25,19 @@ class SquareActivity : AppCompatActivity() {
         squareImage = findViewById(R.id.square)
 
         var squareSize = intent.getIntExtra(EXTRA_SQUARE_SIZE, 100)
+        val isEasyMode = intent.getBooleanExtra(EXTRA_EASY_MODE, false)
+
         if (squareSize == 0) {
             squareSize = 1
         }
+
+        if (isEasyMode){
+            squareSize *= 2
+        }
+
         squareImage.layoutParams.width = squareSize
         squareImage.layoutParams.height = squareSize
+
 
         squareImage.setOnClickListener {
             squareTapped(true)
@@ -37,7 +46,6 @@ class SquareActivity : AppCompatActivity() {
         container.setOnClickListener {
             squareTapped(false)
         }
-
 
     }
 
@@ -50,4 +58,5 @@ class SquareActivity : AppCompatActivity() {
         }
 
     }
+
 }

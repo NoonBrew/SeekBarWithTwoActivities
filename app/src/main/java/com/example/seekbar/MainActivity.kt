@@ -3,21 +3,21 @@ package com.example.seekbar
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.SeekBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.SwitchCompat
 
 
 const val EXTRA_SQUARE_SIZE = "com.example.seekbar.tap_the_square.SQUARE_SIZE"
+const val EXTRA_EASY_MODE = "com.example.seekbar.tap_the_square.EASY_MODE"
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var seekbar: SeekBar
     private lateinit var seekbarLabel: TextView
     private lateinit var showSquareButton: Button
+    private lateinit var easyModeSwitch: Switch
 
     private val squareResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         result -> handleSquareResult(result)
@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         seekbar = findViewById(R.id.seek_bar)
         seekbarLabel = findViewById(R.id.seek_bar_label)
         showSquareButton = findViewById(R.id.show_square_button)
+        easyModeSwitch = findViewById(R.id.easy_mode)
         // Progress is an attribute of seekbar. Gets an Int value.
         val initialProgress = seekbar.progress
         // Function passes the int to the text of our seekbar label.
@@ -47,6 +48,7 @@ class MainActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(p0: SeekBar?) { }
             override fun onStopTrackingTouch(p0: SeekBar?) { }
         })
+
 
         showSquareButton.setOnClickListener {
             showSquare()
@@ -64,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         // based on the progress of the Seekbar
         Intent(this, SquareActivity::class.java).apply {
             putExtra(EXTRA_SQUARE_SIZE, seekbar.progress)
+            putExtra(EXTRA_EASY_MODE, easyModeSwitch.isChecked)
             squareResultLauncher.launch(this)
         }
 
