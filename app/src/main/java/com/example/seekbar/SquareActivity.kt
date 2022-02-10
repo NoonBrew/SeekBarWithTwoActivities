@@ -26,11 +26,12 @@ class SquareActivity : AppCompatActivity() {
 
         var squareSize = intent.getIntExtra(EXTRA_SQUARE_SIZE, 100)
         val isEasyMode = intent.getBooleanExtra(EXTRA_EASY_MODE, false)
-
+        // Sets a square with a 0 value to 1 so there is always something to try and click and
+        // because a 0 is read as match constraints and would fill the whole screen.
         if (squareSize == 0) {
             squareSize = 1
         }
-
+        // If easy mode is toggled we increase the size of the square by 2.
         if (isEasyMode){
             squareSize *= 2
         }

@@ -73,7 +73,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleSquareResult(result: ActivityResult) {
+        // Checks the Result Code passed back from the Square Activity
         if(result.resultCode == RESULT_OK) {
+            // Reads the data from the intent to let us grab the extras.
             val intent = result.data
             val tapped = intent?.getBooleanExtra(EXTRA_TAPPED_INSIDE_SQUARE, false) ?: false
             val message = if (tapped) {
